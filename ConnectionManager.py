@@ -1,5 +1,8 @@
 from RTSPMessageParser import RTSPMessageParser
 from RTSPRespMessage import RTSPRespMessage
+from RTSPMessageGenerator import RTSPMessageGenerator
+from RTSPConstants import RTSPConstants
+
 class ConnectionManager:
 
     IDLE = 0
@@ -13,6 +16,12 @@ class ConnectionManager:
         self.main()
 
     def main(self):
+        resp = None
         while True:
             reqMessage = self.rtspMessageParser.messageQueue.get()
             print reqMessage
+            if reqMessage.method == 'OPTIONS':
+                resp = RTSPMessageGenerator('200',reqMessage.header['CSeq'])
+                resp.respMesage.header['Public'] = RTSPConstants.public
+
+            self.conn.send(resp.getMessage())
