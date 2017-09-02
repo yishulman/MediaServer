@@ -1,9 +1,12 @@
 
 import re, threading
+from Queue import Queue
 from RTSPConstants import RTSPConstants
 from RTSPReqMessage import RTSPReqMessage
 
 class RTSPMessageParser:
+
+    messageQueue = Queue()
 
     requestLine = re.compile('(\S+)\s+(\S+)\s+(\S+)')
     headerField = re.compile('(\S+):\s*(\S+)')
@@ -40,4 +43,6 @@ class RTSPMessageParser:
                 m = self.headerField.match(h)
                 rtspMessage.header[m.group(1)] = m.group(2)
         print rtspMessage.header
+
+        self.messageQueue.put(rtspMessage)
 
