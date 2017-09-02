@@ -1,5 +1,5 @@
 
-import re, threading
+import re, multiprocessing
 from Queue import Queue
 from RTSPConstants import RTSPConstants
 from RTSPReqMessage import RTSPReqMessage
@@ -11,9 +11,11 @@ class RTSPMessageParser:
     requestLine = re.compile('(\S+)\s+(\S+)\s+(\S+)')
     headerField = re.compile('(\S+):\s*(\S+)')
 
-    def __init__(self, connection):
+    def __init__(self, connection,connectionManagerCB):
         (self.conn, self.address) = connection
-        threading.Thread(target=self.recvRtspRequest()).start()
+        self.connectionManagerCB = connectionManagerCB
+        multiprocessing.Process(target=self.recvRtspRequest()).start()
+
 
     def recvRtspRequest(self):
         """Receive RTSP request from the client."""
@@ -44,5 +46,5 @@ class RTSPMessageParser:
                 rtspMessage.header[m.group(1)] = m.group(2)
         print rtspMessage.header
 
-        self.messageQueue.put(rtspMessage)
+        self.connectionManagerCB(rtspMessage)
 

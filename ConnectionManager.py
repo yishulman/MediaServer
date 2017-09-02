@@ -12,16 +12,13 @@ class ConnectionManager:
     def __init__(self, connection):
         (self.conn, self.address) = connection
         print "New connection from %s on port %s" %  (self.address[0], self.address[1])
-        self.rtspMessageParser = RTSPMessageParser(connection)
-        self.main()
+        self.rtspMessageParser = RTSPMessageParser(connection,self.prossessMessage)
 
-    def main(self):
+    def prossessMessage(self, reqMessage):
         resp = None
-        while True:
-            reqMessage = self.rtspMessageParser.messageQueue.get()
-            print reqMessage
-            if reqMessage.method == 'OPTIONS':
-                resp = RTSPMessageGenerator('200',reqMessage.header['CSeq'])
-                resp.respMesage.header['Public'] = RTSPConstants.public
+        print reqMessage
+        if reqMessage.method == 'OPTIONS':
+            resp = RTSPMessageGenerator('200',reqMessage.header['CSeq'])
+            resp.respMesage.header['Public'] = RTSPConstants.public
 
-            self.conn.send(resp.getMessage())
+        self.conn.send(resp.getMessage())
