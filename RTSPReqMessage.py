@@ -1,9 +1,9 @@
 
 class RTSPReqMessage:
 
-    #request line
-    method = ""
-    URI = ""
-    RTSPVersion = ""
+    def __init__(self):
+        self.method = ""
+        self.URI = ""
+        self.RTSPVersion = ""
 
-    header = {'CSeq':'-1'}
+        self.header = {'CSeq': '-1'}

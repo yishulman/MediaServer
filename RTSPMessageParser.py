@@ -9,7 +9,7 @@ class RTSPMessageParser:
     messageQueue = Queue()
 
     requestLine = re.compile('(\S+)\s+(\S+)\s+(\S+)')
-    headerField = re.compile('(\S+):\s*(\S+)')
+    headerField = re.compile('(\S+):\s*(.+)')
 
     def __init__(self, connection,connectionManagerCB):
         (self.conn, self.address) = connection
@@ -25,6 +25,7 @@ class RTSPMessageParser:
                 print '-' * 60 + "\nData received:\n" + '-' * 60
                 self.parseRequest(data)
             else:
+                print "Connection closed by Client"
                 break
 
     def parseRequest(self,message):
@@ -44,7 +45,6 @@ class RTSPMessageParser:
             if h != '':
                 m = self.headerField.match(h)
                 rtspMessage.header[m.group(1)] = m.group(2)
-        print rtspMessage.header
 
         self.connectionManagerCB(rtspMessage)
 

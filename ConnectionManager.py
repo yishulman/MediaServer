@@ -16,9 +16,12 @@ class ConnectionManager:
 
     def prossessMessage(self, reqMessage):
         resp = None
-        print reqMessage
         if reqMessage.method == 'OPTIONS':
             resp = RTSPMessageGenerator('200',reqMessage.header['CSeq'])
             resp.respMesage.header['Public'] = RTSPConstants.public
-
+        else:
+            #Methos not alowed
+            print "Method " + reqMessage.method + " Not supported"
+            resp = RTSPMessageGenerator('405',reqMessage.header['CSeq'])
+            
         self.conn.send(resp.getMessage())
