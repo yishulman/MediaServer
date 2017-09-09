@@ -19,6 +19,10 @@ class ConnectionManager:
         if reqMessage.method == 'OPTIONS':
             resp = RTSPMessageGenerator('200',reqMessage.header['CSeq'])
             resp.respMesage.header['Public'] = RTSPConstants.public
+        elif reqMessage.method == 'DESCRIBE':
+            resp = RTSPMessageGenerator('200',reqMessage.header['CSeq'])
+            resp.respMesage.entity_header['Content-Type'] = 'application/sdp'
+            resp.respMesage.entity_header['Content-Length'] = '0'
         else:
             #Methos not alowed
             print "Method " + reqMessage.method + " Not supported"

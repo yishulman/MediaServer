@@ -1,3 +1,4 @@
+from collections import OrderedDict
 class RTSPRespMessage:
 
     def __init__(self):
@@ -5,7 +6,12 @@ class RTSPRespMessage:
         self.statusCode = ''
         self.reasonPhrase = ''
 
-        self.header = {'CSeq':'-1'}
+        self.header =  OrderedDict();
+        self.header['CSeq'] = '-1'
+
+        self.entity_header = OrderedDict();
+
+        self.entity_body = ""
 
     
 
